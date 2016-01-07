@@ -1,0 +1,43 @@
+#!/bin/bash
+
+THE_PLACE_WHERE_WITCHES_LIVE=${BASH_SOURCE%/*}
+THE_MAX_WIDTH_A_WITCH_CAN_SEE=44
+I_KEEP_MY_BOOKS_ON_AN=old-and-dusty.bookshelf
+I_LEARNT_EVERYTHING_I_KNOW_FROM=A-Thousand-Spells-Every-Witch-Needs-To-Know.book
+
+function summon_from {
+  full_path=$THE_PLACE_WHERE_WITCHES_LIVE/$1
+  echo $(head -$((${RANDOM} % `wc -l < $full_path` + 1)) $full_path | tail -1)
+}
+
+read -r -d '' HIT_EM_WITH <<SPARKLE
+a $(summon_from $I_KEEP_MY_BOOKS_ON_AN) to $(summon_from $I_LEARNT_EVERYTHING_I_KNOW_FROM)
+SPARKLE
+
+read -r -d '' GREETZ <<HEART
+$(tput setaf 5)$(tput bold)
+  ,ad8PPPP8b,     ,d88PPP8ba,  
+ d8P"     "Y8b, ,d8P"      Y8b 
+dP'           "'"            Yd
+I8     ✨                     8I
+Yb,        hello user  ✨    ,dP 
+ "8a,      welcome to     ,a8" 
+   "8a,     online!     ,a8"   
+     "Yba             adP"     
+         Y8a   ✨    a8P'         
+           "8b   d8"           
+              888'              
+$(tput sgr0)$(tput bold)
+ < PLEASE DO YOUR BEST >
+$(tput sgr0)
+═══════ 🎀  💀  🎀  ═══════
+To-day's Spell
+━━━ ★ ━━━
+$(echo $HIT_EM_WITH | fmt -w $(($THE_MAX_WIDTH_A_WITCH_CAN_SEE/2)))
+════════════════════════
+HEART
+
+while IFS= read -r line; do
+  gutter=$(((THE_MAX_WIDTH_A_WITCH_CAN_SEE - ${#line}) / 2))
+  printf "%${gutter}s%s%${gutter}s\n" "" "$line" ""
+done <<< "$GREETZ"
